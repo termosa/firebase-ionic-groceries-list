@@ -1,24 +1,35 @@
-// Ionic Starter App
+angular.module('starter', ['ionic', 'firebase'])
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+.factory('FBase', function ($firebaseArray) {
+  var apiLink = 'https://termosa-groceries.firebaseio.com';
+  return function FBase (name, id) {
+    if (id) {
+      return new Firebase([apiLink, name, id].join('/'));
+    } else {
+      return $firebaseArray(new Firebase([apiLink, name].join('/')));
+    }
+  };
+})
 
-.controller('ListController', function ($scope, $ionicListDelegate) {
+.controller('ListController', function ($scope, $ionicListDelegate, FBase) {
   $scope.STATUS_PURCHASED = 'purchased';
-  $scope.items = [];
+  $scope.items = new FBase('items');
 
   $scope.addItem = function () {
     var name = prompt('What do you need to buy?');
     if (name) {
-      $scope.items.push({ name: name });
+      $scope.items.$add({ name: name });
     }
   };
 
   $scope.purchaseItem = function (item) {
-    $scope.item = item;
-    $scope.item['status'] = $scope.STATUS_PURCHASED;
+    var itemRef = new FBase('items', item.$id);
+
+    itemRef.child('status').set($scope.STATUS_PURCHASED);
     $ionicListDelegate.closeOptionButtons();
+  };
+
+  $scope.isPurchased = function (item) {
+    return item.status === $scope.STATUS_PURCHASED;
   };
 })

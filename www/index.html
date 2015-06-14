@@ -18,6 +18,11 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
+    <!-- Firebase -->
+    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/1.1.1/angularfire.min.js"></script>
+
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
@@ -29,9 +34,9 @@
 
     <ion-content>
       <ion-list>
-        <ion-item ng-repeat="item in items" ng-class="{purchased: item.status === STATUS_PURCHASED}">
+        <ion-item ng-repeat="item in items" ng-class="{purchased: isPurchased(item)}">
           {{item.name}}
-          <ion-option-button class="button-royal" ng-click="purchaseItem(item)">
+          <ion-option-button class="button-royal" ng-if="!isPurchased(item)" ng-click="purchaseItem(item)">
             <i class="icon ion-checkmark"></i>
           </ion-option-button>
         </ion-item>
