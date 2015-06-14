@@ -5,15 +5,20 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+.controller('ListController', function ($scope, $ionicListDelegate) {
+  $scope.STATUS_PURCHASED = 'purchased';
+  $scope.items = [];
+
+  $scope.addItem = function () {
+    var name = prompt('What do you need to buy?');
+    if (name) {
+      $scope.items.push({ name: name });
     }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-  });
+  };
+
+  $scope.purchaseItem = function (item) {
+    $scope.item = item;
+    $scope.item['status'] = $scope.STATUS_PURCHASED;
+    $ionicListDelegate.closeOptionButtons();
+  };
 })
